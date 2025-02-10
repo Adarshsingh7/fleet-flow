@@ -9,20 +9,28 @@ import { location } from "@/features/location/location.service";
 import { useTheme } from "@/context/themeContext";
 
 export default function index() {
+  // Fetch the active user data
   const { data: activeUser } = useQuery<UserType>({ queryKey: ["user"] });
+
+  // Fetch the location data based on the user's route
   const { data: loc } = useQuery({
     queryKey: ["location"],
     queryFn: () => location.getLocationFromRoute(activeUser?.route || ""),
   });
+
+  // Get the current theme
   const { theme } = useTheme();
   const queryClient = useQueryClient();
 
+  // Mutation to invalidate the stops query
   const { mutate } = useMutation({
     mutationFn: async () => {
       await queryClient.invalidateQueries({ queryKey: ["stops"] });
       return 1;
     },
   });
+
+  // Set up an interval to refresh the stops data every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       mutate();
@@ -30,10 +38,13 @@ export default function index() {
     return () => clearInterval(interval);
   }, []);
 
+  // Fetch the user's route stops
   const { filteredStop: data, isLoading } = useGetUserRoute();
 
+  // Show loading screen while data is being fetched
   if (isLoading) return <LoadingScreen />;
 
+  // Show message if there are no stops
   if (!data || data.length === 0) {
     return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -44,6 +55,7 @@ export default function index() {
     );
   }
 
+  // Render each stop item
   const renderItem = ({ item }: { item: StopType | undefined }) => (
     <TrainStopContainer
       arrivalTime={item?.arrivalTime}
@@ -54,8 +66,10 @@ export default function index() {
     />
   );
 
+  // Show loading screen if data is not available
   if (!data) return <LoadingScreen />;
 
+  // Render the list of stops
   return (
     <View style={{ backgroundColor: theme.background }}>
       <Animated.FlatList

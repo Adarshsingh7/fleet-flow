@@ -24,11 +24,13 @@ const UserProfileScreen = () => {
   const { mutate: logout } = useLogout();
   const router = useRouter();
 
+  // Handle user logout
   const handleLogout = () => {
     router.replace("../../..");
     logout();
   };
 
+  // Handle theme color change
   const handleChangeColor = (color: string) => {
     changePrimaryColor(color);
     console.log("CHANGING THE THEME");

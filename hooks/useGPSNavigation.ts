@@ -7,6 +7,7 @@ interface Props {
 }
 
 export const useGPSNavigation = ({ customFunction }: Props) => {
+  // Destructure necessary functions and variables from useCurrentLocation hook
   const {
     startLocationUpdates,
     stopLocationUpdates,
@@ -14,6 +15,8 @@ export const useGPSNavigation = ({ customFunction }: Props) => {
     isFetching,
     errorMsg,
   } = useCurrentLocation();
+
+  // Destructure necessary functions from useNotification hook
   const { onCancelNotification, scheduleNotification } = useNotification({
     body: "sharing of live location is active",
     category: "location-sharing",
@@ -21,14 +24,16 @@ export const useGPSNavigation = ({ customFunction }: Props) => {
     onCancelNotification: customFunction,
   });
 
+  // Function to start GPS navigation service
   const startGPSNavigationService = async () => {
-    startLocationUpdates();
-    scheduleNotification();
+    startLocationUpdates(); // Start location updates
+    scheduleNotification(); // Schedule a notification
   };
 
+  // Function to stop GPS navigation service
   const stopGPSNavigationService = () => {
-    stopLocationUpdates();
-    onCancelNotification();
+    stopLocationUpdates(); // Stop location updates
+    onCancelNotification(); // Cancel the notification
   };
 
   return { startGPSNavigationService, stopGPSNavigationService };

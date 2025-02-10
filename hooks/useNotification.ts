@@ -17,6 +17,8 @@ export const useNotification = ({
 }: Props) => {
   const [notificationId, setNotificationId] = useState<string | null>(null);
   const { status } = useRegisterPushNotifications();
+
+  // Set the notification handler to define how notifications should be handled
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -25,6 +27,7 @@ export const useNotification = ({
     }),
   });
 
+  // Define a notification category with a "Cancel" action
   Notifications.setNotificationCategoryAsync(category, [
     {
       identifier: "cancel-action",
@@ -36,6 +39,7 @@ export const useNotification = ({
     },
   ]);
 
+  // Add a listener for notification responses
   Notifications.addNotificationResponseReceivedListener((response) => {
     if (response.actionIdentifier === "cancel-action") {
       handleCancelAction();
@@ -50,6 +54,7 @@ export const useNotification = ({
     }
   }
 
+  // Effect to add and clean up the notification response listener
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (response) => {
@@ -61,9 +66,10 @@ export const useNotification = ({
     return () => subscription.remove();
   }, [notificationId]);
 
+  // Function to schedule a notification
   async function scheduleNotification() {
     if (status === "granted") {
-      // Schedule the notification
+      // Schedule the notification with the provided content and category
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title: title,
@@ -79,6 +85,7 @@ export const useNotification = ({
     }
   }
 
+  // Function to handle custom notification close action
   function customNotificationClose(fn: () => void) {
     if (fn) fn();
   }

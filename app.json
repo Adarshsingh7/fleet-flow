@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FastBus",
-    "slug": "app",
+    "name": "Fleet Flow",
+    "slug": "fleet-flow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/buss-bee.png",
@@ -45,7 +45,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "85fbac83-deff-408a-bb0a-ac40c1f8766e"
+        "projectId": "91585793-8329-4788-8872-6ee40d516c2e"
       }
     },
     "owner": "adarsh12q0"

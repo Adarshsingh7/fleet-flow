@@ -13,18 +13,29 @@ import Button from "@/components/Button";
 import { useTheme } from "@/context/themeContext";
 
 const LoginScreen = () => {
+  // State variables for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Navigation hook
   const navigation = useRouter();
+
+  // Query to check if the user is authenticated
   const { data: activeUser, isPending } = useQuery({
     queryKey: ["user"],
     queryFn: auth.isAuthenticated,
   });
+
+  // Query client for react-query
   const queryClient = new QueryClient();
+
+  // Theme context
   const { theme } = useTheme();
 
+  // Mutation for re-authentication
   const { mutate: reAuth, isPending: reAuthenicating } = useReAuth();
 
+  // Handle login function
   const handleLogin = async () => {
     if (email && password) {
       await auth.login({ email, password });
@@ -34,6 +45,7 @@ const LoginScreen = () => {
     }
   };
 
+  // Effect to navigate to home if user is authenticated
   useEffect(() => {
     if (activeUser) navigation.navigate("/(home)");
     if (!isPending) SplashScreen.hideAsync();

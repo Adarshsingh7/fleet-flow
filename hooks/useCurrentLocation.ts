@@ -10,19 +10,22 @@ import { location as locationService } from "../features/location/location.servi
 export function useCurrentLocation() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
-  ); // adding the location service demand from the user
-  const [errorMsg, setErrorMsg] = useState<string | null>(null); // storing the error messages if occoured in the fetching location process
-  const [isFetching, setIsFetching] = useState<boolean>(true); // stores the state of the fetching location
+  ); // State to store the current location
+  const [errorMsg, setErrorMsg] = useState<string | null>(null); // State to store error messages
+  const [isFetching, setIsFetching] = useState<boolean>(true); // State to indicate if location is being fetched
   const [subscription, setSubscription] =
-    useState<Location.LocationSubscription | null>(null); // creates the subscription for location which can later be removed
+    useState<Location.LocationSubscription | null>(null); // State to store the location subscription
 
-  const locationRef = useRef<Location.LocationObject | null>(null); // stores the reference for the location used for sending location in use effects
+  const locationRef = useRef<Location.LocationObject | null>(null); // Ref to store the current location
 
+  // Fetch authenticated user data
   const { data: authUser } = useQuery<UserType>({ queryKey: ["user"] });
+  // Fetch location data
   const { data: locationData } = useQuery<LocationType>({
     queryKey: ["location"],
   });
 
+  // Function to stop location updates
   function stopLocationUpdates() {
     if (subscription) {
       locationRef.current = null;
@@ -33,6 +36,7 @@ export function useCurrentLocation() {
     }
   }
 
+  // Function to start location updates
   async function startLocationUpdates() {
     if (Platform.OS === "android" && !Device.isDevice) {
       setErrorMsg(
@@ -66,6 +70,7 @@ export function useCurrentLocation() {
     }
   }
 
+  // Cleanup effect to remove subscription on component unmount
   useEffect(() => {
     return () => {
       if (subscription) {
@@ -74,6 +79,7 @@ export function useCurrentLocation() {
     };
   }, [subscription]);
 
+  // Effect to send location to the server at regular intervals
   useEffect(() => {
     async function sendLocation() {
       try {

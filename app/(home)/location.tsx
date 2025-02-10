@@ -7,6 +7,7 @@ import { useDisableStopStatus } from "@/features/stop/stop.hook";
 import { useTheme } from "@/context/themeContext";
 
 export default function LocationPage() {
+  // Hooks for animations, GPS navigation, user data, stop status, and theme
   const { animations, isAnimating, startAnimation, stopAnimation } =
     useAirDropAnimation();
   const { startGPSNavigationService, stopGPSNavigationService } =
@@ -15,6 +16,7 @@ export default function LocationPage() {
   const { mutate } = useDisableStopStatus();
   const { theme } = useTheme();
 
+  // Function to handle toggling location sharing
   function handleToggleLocationSharing() {
     if (authUser?.role !== "driver")
       return alert("Only drivers can start the location sharing");
@@ -67,17 +69,6 @@ export default function LocationPage() {
       </View>
 
       {/* Start button */}
-      {/* <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          { opacity: pressed ? 0.8 : 1, backgroundColor: theme.primary },
-        ]}
-        onPress={handleToggleLocationSharing}
-      >
-        <Text style={[styles.buttonText, { color: "#fff" }]}>
-          {!isAnimating ? "Start" : "Stop"}
-        </Text>
-      </Pressable> */}
       <Button onPress={handleToggleLocationSharing}>
         <Text style={[styles.buttonText, { color: "#fff" }]}>
           {!isAnimating ? "Start" : "Stop"}
@@ -87,6 +78,7 @@ export default function LocationPage() {
   );
 }
 
+// Button component with custom styles and theme
 interface ButtonProps {
   onPress: () => void;
   children: React.ReactNode;
@@ -108,6 +100,7 @@ const Button = ({ onPress, children }: ButtonProps) => {
   );
 };
 
+// Styles for the components
 const styles = StyleSheet.create({
   container: {
     flex: 1,
