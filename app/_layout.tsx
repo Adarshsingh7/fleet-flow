@@ -15,10 +15,9 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   return (
-    // SafeAreaView to ensure the layout is within the safe area boundaries of a device
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* Provide the QueryClient to the application */}
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      {/* SafeAreaView to ensure the layout is within the safe area boundaries of */}
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Provide the custom theme to the application */}
         <ThemeProvider>
           {/* Provide the Paper components to the application */}
@@ -44,7 +43,7 @@ export default function RootLayout() {
             </Stack>
           </PaperProvider>
         </ThemeProvider>
-      </QueryClientProvider>
-    </SafeAreaView>
+      </SafeAreaView>
+    </QueryClientProvider>
   );
 }
