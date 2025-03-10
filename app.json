@@ -17,7 +17,18 @@
         "foregroundImage": "./assets/images/buss-bee.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adarsh12q0.app"
+      "package": "com.adarsh12q0.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ],
+      "foregroundService": {
+        "notificationTitle": "Fleet Flow is tracking your location",
+        "notificationBody": "Your location is being tracked in the background for route monitoring."
+      }
     },
     "web": {
       "bundler": "metro",
@@ -35,7 +46,15 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow FleetFlow to access your location even when the app is closed.",
+          "locationAlwaysPermission": "Allow FleetFlow to always access your location.",
+          "locationWhenInUsePermission": "Allow FleetFlow to access your location when using the app."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
