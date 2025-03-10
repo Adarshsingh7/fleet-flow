@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserType } from "../types";
 import { useDisableStopStatus } from "@/features/stop/stop.hook";
 import { useTheme } from "@/context/themeContext";
+import { useGPSLoc } from "@/context/GPSContext";
 
 export default function LocationPage() {
   // Hooks for animations, GPS navigation, user data, stop status, and theme
@@ -15,20 +16,23 @@ export default function LocationPage() {
   const { data: authUser } = useQuery<UserType>({ queryKey: ["user"] });
   const { mutate } = useDisableStopStatus();
   const { theme } = useTheme();
+  const { onStartTracking, onStopTracking } = useGPSLoc();
 
   // Function to handle toggling location sharing
   function handleToggleLocationSharing() {
-    if (authUser?.role !== "driver")
-      return alert("Only drivers can start the location sharing");
+    // if (authUser?.role !== "driver")
+    //   return alert("Only drivers can start the location sharing");
     if (!isAnimating) {
-      const routeId = authUser.route;
+      const routeId = authUser?.route;
       if (routeId) {
         mutate(routeId);
       }
-      startGPSNavigationService();
+      // startGPSNavigationService();
+      onStartTracking();
       startAnimation();
     } else {
-      stopGPSNavigationService();
+      // stopGPSNavigationService();
+      onStopTracking();
       stopAnimation();
     }
   }
