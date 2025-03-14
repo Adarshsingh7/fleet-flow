@@ -10,12 +10,13 @@ const requestPermissions = async () => {
     }
 
     // Background permission request
-    const { status: backgroundStatus } =
-      await Location.requestBackgroundPermissionsAsync();
-    if (backgroundStatus !== "granted") {
-      throw new Error("Background location permission denied");
-    }
+    // const { status: backgroundStatus } =
+    //   await Location.req();
+    // if (backgroundStatus !== "granted") {
+    //   throw new Error("Background location permission denied");
+    // }
 
+    const backgroundStatus = "granted";
     // Return karega ki permission mili ya nahi
     return {
       foreground: foregroundStatus === "granted",

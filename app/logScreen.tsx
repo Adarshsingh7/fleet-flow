@@ -1,18 +1,13 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useLogs } from "@/context/logContext";
 
 type LogType = "error" | "warning" | "info" | "success";
 
-interface LogEntry {
-  timestamp: string;
-  message: string;
-  type: LogType;
-}
-
 export default function TerminalScreen() {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
   const [cursorVisible, setCursorVisible] = useState(true);
+  const { logs } = useLogs();
 
   // Blinking cursor effect
   useEffect(() => {
@@ -22,76 +17,65 @@ export default function TerminalScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  // Demo logs for showcase
-  useEffect(() => {
-    const demoLogs = [
-      { type: "info", message: "System initialization..." },
-      { type: "success", message: "Connected to main server" },
-      { type: "warning", message: "Memory usage at 75%" },
-      { type: "error", message: "Failed to fetch remote data" },
-      { type: "info", message: "Running background tasks" },
-      { type: "success", message: "Cache cleared successfully" },
-    ];
-
-    demoLogs.forEach((log, index) => {
-      setTimeout(() => {
-        addLog(log.message, log.type as LogType);
-      }, index * 1000);
-    });
-  }, []);
-
-  const addLog = (message: string, type: LogType) => {
-    const timestamp = new Date().toLocaleTimeString();
-    setLogs((prev) => [...prev, { timestamp, message, type }]);
-  };
-
-  const getLogIcon = (type: LogType) => {
+  const getLogColor = (type: LogType) => {
     switch (type) {
       case "error":
-        return { name: "close-circle", color: "#ff4444" };
+        return "#ff4444";
       case "warning":
-        return { name: "alert", color: "#ffbb33" };
+        return "#ffbb33";
       case "success":
-        return { name: "check-circle", color: "#00C851" };
+        return "#00C851";
       default:
-        return { name: "information", color: "#33b5e5" };
+        return "#33b5e5";
+    }
+  };
+
+  const getLogIcon = (
+    type: LogType,
+  ): {
+    name:
+      | "close-circle-outline"
+      | "alert-outline"
+      | "check-circle-outline"
+      | "information-outline";
+    color: string;
+  } => {
+    switch (type) {
+      case "error":
+        return { name: "close-circle-outline", color: "#ff4444" };
+      case "warning":
+        return { name: "alert-outline", color: "#ffbb33" };
+      case "success":
+        return { name: "check-circle-outline", color: "#00C851" };
+      default:
+        return { name: "information-outline", color: "#33b5e5" };
     }
   };
 
   return (
-    <View style={styles.terminal}>
-      <View style={styles.terminalHeader}>
-        <View style={styles.terminalControls}>
-          <View
-            style={[styles.controlButton, { backgroundColor: "#ff5f56" }]}
-          />
-          <View
-            style={[styles.controlButton, { backgroundColor: "#ffbd2e" }]}
-          />
-          <View
-            style={[styles.controlButton, { backgroundColor: "#27c93f" }]}
-          />
-        </View>
-        <Text style={styles.terminalTitle}>developer_logs.sh</Text>
-      </View>
-
-      <ScrollView style={styles.logContainer}>
-        {logs.map((log, index) => (
-          <View key={index} style={styles.logEntry}>
-            <MaterialCommunityIcons
-              size={16}
-              color={getLogIcon(log.type).color}
-              style={styles.logIcon}
-            />
-            <Text style={styles.timestamp}>{log.timestamp}</Text>
-            <Text style={styles.logText}>{log.message}</Text>
+    <View style={styles.container}>
+      <View style={styles.terminal}>
+        <ScrollView style={styles.logContainer}>
+          {logs.map((log, index) => (
+            <View key={index} style={styles.logEntry}>
+              <MaterialCommunityIcons
+                name={getLogIcon(log.type).name}
+                size={16}
+                color={getLogIcon(log.type).color}
+                style={styles.logIcon}
+              />
+              <Text style={styles.timestamp}>{log.timestamp}</Text>
+              <Text style={[styles.logText, { color: getLogColor(log.type) }]}>
+                {log.message}
+              </Text>
+            </View>
+          ))}
+          <View style={styles.currentLine}>
+            <Text style={styles.prompt}>┌──(adarsh㉿kali)-[~]</Text>
+            <Text style={styles.cursor}>{cursorVisible ? "█" : " "}</Text>
           </View>
-        ))}
-        <View style={styles.currentLine}>
-          <Text style={styles.prompt}>root@dev:~$</Text>
-          <Text style={styles.cursor}>{cursorVisible ? "█" : " "}</Text>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 }
@@ -133,7 +117,7 @@ const styles = StyleSheet.create({
   },
   logContainer: {
     flex: 1,
-    padding: 10,
+    paddingBottom: 10,
   },
   logEntry: {
     flexDirection: "row",

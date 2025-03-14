@@ -4,6 +4,8 @@ import CustomHeader from "@/components/header";
 import { Provider as PaperProvider } from "react-native-paper";
 import { ThemeProvider } from "@/context/themeContext"; // Removed unused import 'useTheme'
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LogContextProvider } from "@/context/logContext";
+import GPSContextProvider from "@/context/GPSContext";
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -22,25 +24,36 @@ export default function RootLayout() {
         <ThemeProvider>
           {/* Provide the Paper components to the application */}
           <PaperProvider>
-            {/* Stack navigator for managing screen navigation */}
-            <Stack>
-              {/* Define the "index" screen with a custom header */}
-              <Stack.Screen
-                name="index"
-                options={{
-                  title: "Home",
-                  header: () => <CustomHeader title="Login" />,
-                }}
-              />
-              {/* Define the "(home)" screen without a header */}
-              <Stack.Screen
-                name="(home)"
-                options={{
-                  title: "index",
-                  headerShown: false,
-                }}
-              />
-            </Stack>
+            <LogContextProvider>
+              <GPSContextProvider>
+                {/* Stack navigator for managing screen navigation */}
+                <Stack>
+                  {/* Define the "index" screen with a custom header */}
+                  <Stack.Screen
+                    name="index"
+                    options={{
+                      title: "Home",
+                      header: () => <CustomHeader title="Login" />,
+                    }}
+                  />
+                  {/* Define the "(home)" screen without a header */}
+                  <Stack.Screen
+                    name="(home)"
+                    options={{
+                      title: "index",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="log"
+                    options={{
+                      title: "logScreen",
+                      headerShown: false,
+                    }}
+                  />
+                </Stack>
+              </GPSContextProvider>
+            </LogContextProvider>
           </PaperProvider>
         </ThemeProvider>
       </SafeAreaView>

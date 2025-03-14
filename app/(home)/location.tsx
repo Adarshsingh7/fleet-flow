@@ -1,6 +1,5 @@
 import { StyleSheet, View, Pressable, Text, Animated } from "react-native";
 import { useAirDropAnimation } from "@/hooks/useAirDropAnimation";
-import { useGPSNavigation } from "@/hooks/useGPSNavigation";
 import { useQuery } from "@tanstack/react-query";
 import { UserType } from "../types";
 import { useDisableStopStatus } from "@/features/stop/stop.hook";
@@ -11,8 +10,6 @@ export default function LocationPage() {
   // Hooks for animations, GPS navigation, user data, stop status, and theme
   const { animations, isAnimating, startAnimation, stopAnimation } =
     useAirDropAnimation();
-  const { startGPSNavigationService, stopGPSNavigationService } =
-    useGPSNavigation({ customFunction: stopAnimation });
   const { data: authUser } = useQuery<UserType>({ queryKey: ["user"] });
   const { mutate } = useDisableStopStatus();
   const { theme } = useTheme();
